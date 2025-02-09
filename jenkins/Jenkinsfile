@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/your-github-username/astra-test-code.git'
+            }
+        }
+        stage('Terraform Apply') {
+            steps {
+                sh 'cd terraform && terraform apply -auto-approve'
+            }
+        }
+        stage('Build Lambda') {
+            steps {
+                sh 'cd lambda && sh build_lambda.sh'
+            }
+        }
+        stage('Deploy Lambda') {
+            steps {
+                sh 'cd lambda && sh deploy_lambda.sh'
+            }
+        }
+    }
+}
