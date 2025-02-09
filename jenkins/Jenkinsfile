@@ -10,6 +10,16 @@ pipeline {
                 git branch: 'pradeep/gen1', url: 'https://github.com/Pradeep-VJ/astra-test-code.git'
             }
         }
+        stage('Build Lambda Package') {
+            steps {
+                dir('lambda') {
+                    sh '''
+                    chmod +x build_lambda.sh
+                    ./build_lambda.sh
+                    '''
+                }
+            }
+        }
         stage('Terraform Init & Apply') {
             steps {
                 dir('terraform') {
@@ -22,14 +32,14 @@ pipeline {
                 }
             }
         }
-        stage('Build Lambda') {
-            steps {
-                sh 'cd lambda && sh build_lambda.sh'
-            }
-        }
         stage('Deploy Lambda') {
             steps {
-                sh 'cd lambda && sh deploy_lambda.sh'
+                dir('lambda') {
+                    sh '''
+                    chmod +x deploy_lambda.sh
+                    ./deploy_lambda.sh
+                    '''
+                }
             }
         }
     }
