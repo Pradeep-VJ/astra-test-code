@@ -1,53 +1,53 @@
 pipeline {
     agent any
+
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
+
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'pradeep/gen1', url: 'https://github.com/Pradeep-VJ/astra-test-code.git'
             }
         }
+
         stage('Install Python & pip') {
             steps {
-                sh '''
-                sudo yum install python3 -y
-                sudo yum install python3-pip -y
-                '''
+                sh 'sudo yum install python3 -y'
+                sh 'sudo yum install python3-pip -y'
             }
         }
+
         stage('Build Lambda Package') {
             steps {
                 dir('lambda') {
-                    sh '''
-                    chmod +x build_lambda.sh
-                    ls -la src
-                    ./build_lambda.sh
-                    '''
+                    sh 'chmod +x build_lambda.sh'
+                    sh './build_lambda.sh'
                 }
             }
         }
+
+        stage('Move Lambda Package') {
+            steps {
+                sh 'mv lambda/lambda_package.zip terraform/lambda_package.zip'
+            }
+        }
+
         stage('Terraform Init & Apply') {
             steps {
                 dir('terraform') {
-                    sh '''
-                    terraform init
-                    terraform apply -auto-approve \
-                        -var="AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" \
-                        -var="AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
-                    '''
+                    sh 'terraform init'
+                    sh 'terraform apply -auto-approve -var="AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" -var="AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"'
                 }
             }
         }
+
         stage('Deploy Lambda') {
             steps {
-                dir('lambda') {
-                    sh '''
-                    chmod +x deploy_lambda.sh
-                    ./deploy_lambda.sh
-                    '''
+                dir('terraform') {
+                    sh 'terraform apply -auto-approve'
                 }
             }
         }
