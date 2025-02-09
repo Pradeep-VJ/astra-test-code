@@ -23,6 +23,7 @@ pipeline {
                 dir('lambda') {
                     sh '''
                     chmod +x build_lambda.sh
+                    ls -la src
                     ./build_lambda.sh
                     '''
                 }
