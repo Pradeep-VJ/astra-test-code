@@ -1,0 +1,4 @@
+boto3
+playwright
+requests
+beautifulsoup4
