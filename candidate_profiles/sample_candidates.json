@@ -1,0 +1,16 @@
+[
+    {
+        "name": "Alice Johnson",
+        "email": "alice@example.com",
+        "phone": "123-456-7890",
+        "linkedin": "https://linkedin.com/in/alicejohnson",
+        "resume": "s3://resume-storage/alice_johnson.pdf"
+    },
+    {
+        "name": "Bob Smith",
+        "email": "bob@example.com",
+        "phone": "987-654-3210",
+        "linkedin": "https://linkedin.com/in/bsmith",
+        "resume": "s3://resume-storage/bob_smith.pdf"
+    }
+]
