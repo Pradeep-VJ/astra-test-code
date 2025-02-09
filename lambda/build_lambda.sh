@@ -5,6 +5,7 @@ echo "🔧 Installing dependencies..."
 pip3 install -r src/requirements.txt -t package
 
 echo "📦 Creating Lambda package..."
+mkdir -p package
 cd package
 zip -r9 ../lambda_package.zip .
 
