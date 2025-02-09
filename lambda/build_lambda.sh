@@ -1,16 +1,20 @@
 #!/bin/bash
+set -e
 
-echo "🔧 Installing dependencies..."
-pip install -r src/requirements.txt -t package/
+cd "$(dirname "$0")"
 
-echo "📦 Creating deployment package..."
-cd package || exit 1
-zip -r ../lambda_package.zip .
+# Create a package directory
+rm -rf package
+mkdir package
+
+# Install dependencies
+pip install -r requirements.txt -t package/
+
+# Copy function code
+cp apply_jobs.py package/
+
+# Zip package
+cd package
+zip -r9 ../lambda_package.zip .
 cd ..
-
-zip -g lambda_package.zip src/apply_jobs.py
-zip -g lambda_package.zip src/dynamo_utils.py
-zip -g lambda_package.zip src/playwright_helpers.py
-zip -g lambda_package.zip src/config.py
-
-echo "✅ Lambda package built successfully: lambda_package.zip"
+echo "Lambda package created: lambda_package.zip"
