@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "us-east-1"
-}
-
 resource "aws_iam_role" "job_application_lambda_role" {
   name = "job-application-lambda-role"
 
