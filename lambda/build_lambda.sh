@@ -2,7 +2,7 @@
 set -e
 
 echo "🔧 Installing dependencies..."
-pip install -r src/requirements.txt -t package
+pip3 install -r src/requirements.txt -t package
 
 echo "📦 Creating Lambda package..."
 cd package
